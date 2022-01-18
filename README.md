@@ -21,7 +21,7 @@ program text (such as the GNAT runtime).
 
 The .gpr project file determines which source files to include, and how to configure the preprocessor (if any),
 so there is no way to correctly implement smart language based features without the right project. See [this
-demonstrator project with multiple .gpr files]() as an example, which you can use to test this plugin.
+demonstrator project with multiple .gpr files](https://github.com/TamaMcGlinn/test_multigpr) as an example, which you can use to test this plugin.
 
 # Solutions
 
