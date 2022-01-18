@@ -56,8 +56,14 @@ to switch projects.
 
 ## Installing gpr_selector
 
-After installing [lspconfig](https://github.com/neovim/nvim-lspconfig), add this to your language server
-setup section:
+Install the plugin in the usual way, and also [lspconfig](https://github.com/neovim/nvim-lspconfig):
+
+```
+Plug 'TamaMcGlinn/vimlsp_gpr_selector'
+Plug 'neovim/nvim-lspconfig'
+```
+
+Then add this to your language server setup section:
 
 ```
 require("lspconfig").als.setup{
