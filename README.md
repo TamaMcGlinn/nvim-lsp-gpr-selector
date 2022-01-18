@@ -59,7 +59,7 @@ to switch projects.
 Install the plugin in the usual way, and also [lspconfig](https://github.com/neovim/nvim-lspconfig):
 
 ```
-Plug 'TamaMcGlinn/vimlsp_gpr_selector'
+Plug 'TamaMcGlinn/nvim-lsp-gpr-selector'
 Plug 'neovim/nvim-lspconfig'
 ```
 
