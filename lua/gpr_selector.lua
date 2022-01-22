@@ -63,18 +63,16 @@ local function get_choice_list(choices)
   return list
 end
 
-local function select_gpr_file(file)
-  vim.g["als_gpr_projectfile"] = file
-  print("Loaded " .. file)
-end
-
 local function gpr_select()
   local projectfiles = find_gprfiles()
   if #projectfiles == 0 then
-    print("Error: Unable to find gpr project file. Open it and run :GPRSelect manually.")
+    print("No gpr project found. Open one and run :GPRSelect.")
+    return ''
   elseif #projectfiles == 1 then
     -- select automatically if 1 option,
-    select_gpr_file(projectfiles[1])
+    local project = projectfiles[1]
+    print("Selected " .. project)
+    return project
   else
     -- else ask which project file to use
     local prompt = "Choose a GPR project file:"
@@ -82,23 +80,35 @@ local function gpr_select()
     local choice = tonumber(vim.fn.input(prompt .. "\n" .. choice_list))
     if choice == nil then
       print("Cancelled due to invalid choice.")
+      return ''
     else
-      select_gpr_file(projectfiles[choice])
+      local project = projectfiles[choice]
+      print("Chose " .. project)
+      return project
     end
   end
 end
 
 local function gpr_select_manual()
-  vim.cmd('LspStop')
-  gpr_select()
-  vim.cmd('LspStart')
+  vim.g["als_gpr_projectfile"] = gpr_select()
+  vim.api.nvim_command('sleep 250m')  -- works if > 230 milliseconds on my machine
+  vim.cmd('LspRestart')
+end
+
+local function get_gpr_project()
+  if vim.g.als_gpr_projectfile ~= nil then
+    -- use previously saved project
+    return vim.g.als_gpr_projectfile
+  end
+  local gpr_project = gpr_select()
+  -- save project file for next time
+  vim.g["als_gpr_projectfile"] = gpr_project
+  return gpr_project
 end
 
 local function als_on_init(client)
-  if (vim.g.als_gpr_projectfile or "") == "" then
-    gpr_select()
-  end
-  client.config.settings.ada = { projectFile = vim.g.als_gpr_projectfile }
+  local gpr_project = get_gpr_project()
+  client.config.settings.ada = { projectFile = gpr_project }
   client.notify("workspace/didChangeConfiguration")
   return true
 end
