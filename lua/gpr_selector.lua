@@ -81,8 +81,9 @@ local function gpr_select()
     end
 end
 
-local function gpr_select_manual()
-    vim.g["als_gpr_projectfile"] = gpr_select()
+local function gpr_select_manual(filename)
+    if filename == nil then filename = gpr_select() end
+    vim.g["als_gpr_projectfile"] = filename
     vim.api.nvim_command('sleep 250m') -- works if > 230 milliseconds on my machine
     vim.cmd('LspRestart')
 end
