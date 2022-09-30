@@ -32,7 +32,7 @@ to best.
 ## Hardcoded projectfile
 
 The note in the error message comes from ALS, and asks you to set `ada.projectFile`. The minimal way using
-[lspconfig](https://github.com/neovim/nvim-lspconfig) would be:
+[lspconfig](https://github.com/TamaMcGlinn/nvim-lspconfig) would be:
 
 ```
 require("lspconfig").als.setup{
@@ -56,11 +56,11 @@ to switch projects.
 
 ## Installing gpr_selector
 
-Install the plugin in the usual way, and also [lspconfig](https://github.com/neovim/nvim-lspconfig):
+Install the plugin in the usual way, and also [lspconfig](https://github.com/TamaMcGlinn/nvim-lspconfig):
 
 ```
 Plug 'TamaMcGlinn/nvim-lsp-gpr-selector'
-Plug 'neovim/nvim-lspconfig'
+Plug 'TamaMcGlinn/nvim-lspconfig'
 ```
 
 Then add this to your language server setup section:
