@@ -25,7 +25,7 @@ The best solution, in my opinion, is to install this plugin. However, for comple
 Hardcoded projectfile
 ---------------------
 
-The note in the error message comes from ALS, and asks you to set `ada.projectFile`. The minimal way using [lspconfig](https://github.com/TamaMcGlinn/nvim-lspconfig) would be:
+The note in the error message comes from ALS, and asks you to set `ada.projectFile`. The minimal way using [lspconfig](https://github.com/neovim/nvim-lspconfig) would be:
 
 ```
 require("lspconfig").als.setup{
