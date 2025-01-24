@@ -84,7 +84,6 @@ end
 local function gpr_select_manual(filename)
     if filename == nil then filename = gpr_select() end
     vim.g["als_gpr_projectfile"] = filename
-    vim.api.nvim_command('sleep 250m') -- works if > 230 milliseconds on my machine
     vim.cmd('LspRestart')
 end
 
@@ -99,10 +98,16 @@ local function get_gpr_project()
     return gpr_project
 end
 
+local last_project = nil
+
 local function als_on_init(client)
     local gpr_project = get_gpr_project()
     client.config.settings.ada = {projectFile = gpr_project}
     client.notify("workspace/didChangeConfiguration")
+    if last_project ~= gpr_project then
+      last_project = gpr_project
+      vim.cmd('LspRestart')
+    end
     return true
 end
 
