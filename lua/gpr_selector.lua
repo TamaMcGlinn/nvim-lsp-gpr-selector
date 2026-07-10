@@ -83,7 +83,9 @@ end
 
 local function restart_ada_lsp()
   if vim.fn.has("nvim-0.12") == 1 then
-    vim.cmd("lsp restart ada_ls")
+    if #vim.lsp.get_clients({ name = "ada_ls" }) > 0 then
+      vim.cmd("lsp restart ada_ls")
+    end
   else
     error("nvim-lsp-gpr-selector needs nvim 0.12")
   end
@@ -121,7 +123,7 @@ local function als_on_init(client)
     client.notify("workspace/didChangeConfiguration", new_config)
     -- we purposefully don't this, but in case we want to in future,
     -- we can change all currently running ALS clients as well:
-    -- for _, existing_client in ipairs(vim.lsp.get_clients({ name = "als" })) do
+    -- for _, existing_client in ipairs(vim.lsp.get_clients({ name = "ada_ls" })) do
     --   existing_client.notify("workspace/didChangeConfiguration", new_config)
     -- end
     last_project = gpr_project
