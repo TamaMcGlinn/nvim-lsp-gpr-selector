@@ -81,10 +81,18 @@ local function gpr_select()
     end
 end
 
+local function restart_ada_lsp()
+  if vim.fn.has("nvim-0.12") == 1 then
+    vim.cmd("lsp restart ada_ls")
+  else
+    error("nvim-lsp-gpr-selector needs nvim 0.12")
+  end
+end
+
 local function gpr_select_manual(filename)
     if filename == nil then filename = gpr_select() end
     vim.g["als_gpr_projectfile"] = filename
-    vim.cmd('LspRestart')
+    restart_ada_lsp()
 end
 
 local function get_gpr_project()
@@ -102,12 +110,22 @@ local last_project = nil
 
 local function als_on_init(client)
     local gpr_project = get_gpr_project()
-    client.config.settings.ada = {projectFile = gpr_project}
-    client.notify("workspace/didChangeConfiguration")
-    if last_project ~= gpr_project then
-      last_project = gpr_project
-      vim.cmd('LspRestart')
+    if last_project == gpr_project then
+      -- do nothing, user selected the same as already set
+      return true
     end
+    client.config = client.config or {}
+    client.config.settings = client.config.settings or {}
+    client.config.settings.ada = {projectFile = gpr_project}
+    local new_config = { settings = { ada = client.config.settings.ada } }
+    client.notify("workspace/didChangeConfiguration", new_config)
+    -- we purposefully don't this, but in case we want to in future,
+    -- we can change all currently running ALS clients as well:
+    -- for _, existing_client in ipairs(vim.lsp.get_clients({ name = "als" })) do
+    --   existing_client.notify("workspace/didChangeConfiguration", new_config)
+    -- end
+    last_project = gpr_project
+    restart_ada_lsp()
     return true
 end
 

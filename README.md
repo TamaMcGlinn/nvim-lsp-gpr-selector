@@ -3,6 +3,10 @@ Neovim ALS GPR project selector
 
 This is a Neovim plugin for configuring ALS via LSP, allowing you to select the GPR project to use.
 
+> [!IMPORTANT]
+>
+> Requires at least Neovim 0.12
+
 The problem
 ===========
 
@@ -28,29 +32,40 @@ Hardcoded projectfile
 The note in the error message comes from ALS, and asks you to set `ada.projectFile`. The minimal way using [lspconfig](https://github.com/neovim/nvim-lspconfig) would be:
 
 ```
-require("lspconfig").als.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
+vim.lsp.enable('ada_ls')
+vim.lsp.config('ada_ls', {
   settings = {
     ada = {
-      projectFile = "/home/tama/code/ada/test_multigpr/one.gpr"
+      projectFile = "two.gpr";
+      -- scenarioVariables = { ... };
     }
   }
+})
+```
+
+Per-project settings file
+-------------------------
+
+If you add a `.als.json` file in the root of your project with local settings:
+
+```
+{
+   "projectFile": "two.gpr",
 }
 ```
 
-Per-project configuration file
-------------------------------
+It works. Also, if you have this plugin installed it will not get in your way until you
+want to switch project. TODO: A nice feature in future would be to check if the `.als.json` is
+gitignored, and if so, update it whenever you switch project using this plugin.
 
-There is a solution [discussed here](https://neovim.discourse.group/t/lsp-project-specific-settings/541/2) involving reading json files left in the project directory and using that to set the projectFile. As of writing, there is no finished code ready to use for als. Although it is clear that this approach would work, it would require a separate json file for each directory, to be modified by hand whenever needing to switch projects.
+See [the ada_language_server documentation](https://github.com/AdaCore/ada_language_server/blob/master/doc/settings.md) for more fields you can add to .als.json.
 
 Installing gpr_selector
 -----------------------
 
-Install the plugin in the usual way, and also [lspconfig](https://github.com/TamaMcGlinn/nvim-lspconfig):
+Install the plugin in the usual way, e.g.
 
 ```
-Plug 'TamaMcGlinn/nvim-lsp-gpr-selector'
 Plug 'TamaMcGlinn/nvim-lspconfig'
 ```
 
@@ -58,8 +73,6 @@ Then add this to your language server setup section:
 
 ```
 require("lspconfig").als.setup{
-  on_attach = on_attach,
-  capabilities = capabilities,
   on_init = require("gpr_selector").als_on_init
 }
 ```
